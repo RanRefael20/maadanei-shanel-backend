@@ -6,7 +6,7 @@ const User = require("../Model_Schema/usersSchema");
 const verifyToken = require("../middleware/verifyToken");
 
 router.put("/update", verifyToken, async (req, res) => {
-  const { username, email, password, phone, birthdate } = req.body;
+  const { username, email, password, phone, birthdate, address } = req.body;
 
   try {
     const updates = {};
@@ -15,6 +15,7 @@ router.put("/update", verifyToken, async (req, res) => {
     if (email) updates.email = email;
     if (phone) updates.phone = phone;
     if (birthdate) updates.birthdate = birthdate;
+    if (typeof address !== "undefined") updates.address = address;
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,7 +38,8 @@ router.put("/update", verifyToken, async (req, res) => {
         username: updatedUser.username,
         email: updatedUser.email,
         phone: updatedUser.phone,
-        birthdate: updatedUser.birthdate
+        birthdate: updatedUser.birthdate,
+        address: updatedUser.address
       }
     });
 

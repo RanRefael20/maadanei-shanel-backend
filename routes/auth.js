@@ -11,24 +11,22 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "אימייל או סיסמה לא נכונים" });
+   if (!user) {
+      return res.status(401).json({ message: "האימייל לא רשום במערכת" });
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return res.status(401).json({ message: "אימייל או סיסמה לא נכונים" });
+      return res.status(401).json({ message: "הסיסמה שגוילללללה" });
     }
 
     // ✅ יצירת טוקן עם JWT_SECRET מה־.env
 const token = jwt.sign(
   { userId: user._id },
   process.env.JWT_SECRET,
-  { expiresIn: "20m" }
+  { expiresIn: "20d" }
 );
 
-console.log("🔑 JWT_SECRET:", process.env.JWT_SECRET);
-console.log("✅ token:", token);
 
 
     // ✅ שליחת טוקן + פרטים נוספים
