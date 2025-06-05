@@ -7,7 +7,7 @@ const verifyToken = require("../middleware/verifyToken");
 
 router.put("/update", verifyToken, async (req, res) => {
   const { username, email, password, phone, birthdate, address } = req.body;
-
+console.log(req.body)
   try {
     const updates = {};
 
@@ -23,7 +23,7 @@ router.put("/update", verifyToken, async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-      req.userId,
+      req.user.id,
       { $set: updates },
       { new: true }
     );

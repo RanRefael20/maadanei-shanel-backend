@@ -25,6 +25,7 @@ const updateUser = require("./routes/updateUser");
 const verifyPassword = require("./routes/verifyPassword");
 const getUserDetails = require("./routes/getUserDetails");
 const orderRoutes = require("./routes/orders");
+const savedMenuRoutes = require("./routes/savedMenuRoutes");
 
 
 
@@ -43,6 +44,29 @@ app.use("/api", getUserDetails);
 app.use("/api", updateUser);
 app.use("/api", verifyPassword);
 app.use("/api/orders", orderRoutes);
+app.use("/api/savedMenus", savedMenuRoutes);
+
+
+// 404 – אם לא נמצא ראוט מתאים
+app.use((req, res, next) => {
+  res.status(404).json({ success: false, message: "נתיב לא נמצא." });
+});
+
+// שגיאות מערכת (500 וכו')
+app.use((err, req, res, next) => {
+  console.error("🔥 שגיאה גלובלית:");
+  console.error("➡️ נתיב:", req.originalUrl);
+  console.error("➡️ שיטה:", req.method);
+  console.error("➡️ גוף הבקשה:", req.body);
+  console.error("➡️ תוכן השגיאה:", err.stack);
+
+  res.status(500).json({
+    success: false,
+    message: "שגיאה בשרת. נסה שוב מאוחר יותר.",
+    // רק בסביבת פיתוח תראה פירוט – לא בפרודקשן
+    ...(process.env.NODE_ENV === "development" && { error: err.message })
+  });
+});
 
 
 

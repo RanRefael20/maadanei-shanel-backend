@@ -4,42 +4,40 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const User = require("../Model_Schema/usersSchema");
 
-
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-
+router.post("/login", async (req, res, next) => {
   try {
+    const { email, password } = req.body;
+
     const user = await User.findOne({ email });
-   if (!user) {
-      return res.status(401).json({ message: "האימייל לא רשום במערכת" });
+    if (!user) {
+      return res.status(401).json({ success: false, message: "האימייל לא רשום במערכת" });
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return res.status(401).json({ message: "הסיסמה שגוילללללה" });
+      return res.status(401).json({ success: false, message: "הסיסמה שגויה" });
     }
 
-    // ✅ יצירת טוקן עם JWT_SECRET מה־.env
-const token = jwt.sign(
-  { userId: user._id },
-  process.env.JWT_SECRET,
-  { expiresIn: "20d" }
-);
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "20d" }
+    );
 
-
-
-    // ✅ שליחת טוקן + פרטים נוספים
-res.json({
-  message: "התחברת בהצלחה!",
-  token: token,
-  username: user.username,
-  email: user.email
-});
+    res.json({
+      success: true,
+      message: "התחברת בהצלחה!",
+      token : token,
+      _id: user._id, // ✅ חשוב מאוד
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      address: user.address || "",
+      birthdate: user.birthdate || "",
+    });
 
   } catch (err) {
-    console.error("❌ שגיאה בהתחברות:", err);
-    res.status(500).json({ message: "שגיאת שרת" });
+    next(err);
   }
 });
 
