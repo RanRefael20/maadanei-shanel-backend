@@ -5,6 +5,7 @@ const verifyToken = require(".././middleware/verifyToken");
 
 // POST /api/savedMenus – שמירה
 router.post("/", verifyToken, async (req, res, next) => {  try {
+  console.log("/")
     const { name, items, total } = req.body;
 console.log("🎯 לפני שמירה", { name, items, total, userId: req.user.id });
 
@@ -28,6 +29,7 @@ if (!name || !Array.isArray(items) || typeof total !== "number") {
 
 // GET /api/savedMenus/:userId – קבלת כל השמורים
 router.get("/:userId", verifyToken, async (req, res) => {
+  console.log("🔎 userId param:", req.params.userId); // ✅ תוודא מה התקבל
   try {
     const menus = await SavedMenu.find({ userId: req.params.userId }).sort({ createdAt: -1 });
     res.json(menus);
@@ -38,6 +40,8 @@ router.get("/:userId", verifyToken, async (req, res) => {
 
 // GET /api/savedMenus/single/:id – שליפה לפי id
 router.get("/single/:id", verifyToken, async (req, res) => {
+  console.log("single");
+  
   try {
     const menu = await SavedMenu.findById(req.params.id);
     if (!menu) return res.status(404).json({ message: "לא נמצא" });
@@ -50,6 +54,8 @@ router.get("/single/:id", verifyToken, async (req, res) => {
 // DELETE /api/savedMenus/delete/:id
 // DELETE /api/savedMenus/delete/:id
 router.delete("/delete/:id", verifyToken, async (req, res) => {
+  console.log("delete");
+  
   try {
     const menu = await SavedMenu.findById(req.params.id);
 
