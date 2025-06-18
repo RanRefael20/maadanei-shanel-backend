@@ -4,25 +4,44 @@ const SavedMenu = require("../Model_Schema/SavedMenuSchema");
 const verifyToken = require(".././middleware/verifyToken");
 
 // POST /api/savedMenus – שמירה
-router.post("/", verifyToken, async (req, res, next) => {  try {
-  console.log("/")
+router.post("/", verifyToken, async (req, res, next) => {
+  try {
     const { name, items, total } = req.body;
-console.log("🎯 לפני שמירה", { name, items, total, userId: req.user.id });
+    console.log("🎯 לפני שמירה", { name, items, total, userId: req.user.id });
 
-if (!name || !Array.isArray(items) || typeof total !== "number") {
-  return res.status(400).json({ message: "שדות לא תקינים לשמירה" });
-}
+    if (!name || !Array.isArray(items) || typeof total !== "number") {
+      return res.status(400).json({ message: "שדות לא תקינים לשמירה" });
+    }
+
+    // 🔁 ודא שלכל פריט יש קטגוריה – אם לא, שים 'לא מסווג'
+    const sanitizedItems = items.map((item) => ({
+      name: item.name,
+      price: item.price,
+      category: item.category || "לא מסווג"
+    }));
 
     const newMenu = new SavedMenu({
       userId: req.user.id,
       name,
-      items,
+      items: sanitizedItems,
       total
     });
+
     await newMenu.save();
     res.status(201).json(newMenu);
   } catch (err) {
-   next(err); // ⬅️ ייתפס בשגיאה הגלובלית שלך
+    next(err);
+  }
+});
+
+
+// GET /api/savedMenus/count – מחזיר כמה תפריטים שמורים יש למשתמש
+router.get("/count", verifyToken, async (req, res) => {
+  try {
+    const count = await SavedMenu.countDocuments({ userId: req.user.id });
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ message: "שגיאה בקבלת כמות התפריטים" });
   }
 });
 

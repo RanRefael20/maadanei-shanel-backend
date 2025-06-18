@@ -13,6 +13,7 @@ router.post("/login", async (req, res, next) => {
       return res.status(401).json({ success: false, message: "האימייל לא רשום במערכת" });
     }
 
+
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
       return res.status(401).json({ success: false, message: "הסיסמה שגויה" });
@@ -28,7 +29,7 @@ router.post("/login", async (req, res, next) => {
       success: true,
       message: "התחברת בהצלחה!",
       token : token,
-      _id: user._id, // ✅ חשוב מאוד
+      _id: user._id, // ✅ חשוב מאוד`
       username: user.username,
       email: user.email,
       phone: user.phone,

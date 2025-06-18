@@ -61,6 +61,16 @@ app.use((err, req, res, next) => {
   console.error("➡️ גוף הבקשה:", req.body);
   console.error("➡️ תוכן השגיאה:", err.stack);
 
+    // שגיאת ולידציה של Mongoose
+  if (err.name === "ValidationError") {
+    const errors = Object.values(err.errors).map(e => e.message);
+    return res.status(400).json({
+      success: false,
+      message: "שגיאת ולידציה",
+      errors // זה מערך של הודעות שגיאה מהסכמה
+    });
+  }
+
   res.status(500).json({
     success: false,
     message: "שגיאה בשרת. נסה שוב מאוחר יותר.",

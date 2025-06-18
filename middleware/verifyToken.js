@@ -15,7 +15,7 @@ req.user = { id: decoded.id }; // ✅ מצמיד את המשתמש
     next();
   } catch (err) {
     console.error("❌ טוקן לא תקף:", err);
-    res.status(403).json({ message: "טוקן שגוי או פג תוקף" });
+    res.status(403).json({ message: "עלייך להתחבר או להרשם" });
   }
 };
 
