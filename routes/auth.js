@@ -15,6 +15,8 @@ router.post("/login", async (req, res, next) => {
 
 
     const isValid = await bcrypt.compare(password, user.password);
+    
+    
     if (!isValid) {
       return res.status(401).json({ success: false, message: "הסיסמה שגויה" });
     }

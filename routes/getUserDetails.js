@@ -14,16 +14,33 @@ const user = await User.findById(req.user.id);
       return res.status(404).json({ success: false, message: "משתמש לא נמצא" });
      
     }
+  console.log(user._id);
   
     res.json({
-      success: true,
+/*       success: true,
   _id: user._id, // ← זה חשוב מאוד!
   username: user.username,
   email: user.email,
   phone: user.phone,
   birthdate: user.birthdate,
-  address: user.address || "",      
+  address: user.address || "",
+  birthdate: user.birthdate,
+  lastOrderAt: user.lastOrderAt,
+  points: user.points */
+
+    _id: user._id,
+  username: user.username,
+  email: user.email,
+  phone: user.phone,
+  birthdate: user.birthdate,
+  address: user.address || "",
+  lastOrderAt: user.lastOrderAt,
+  points: user.points
+
+
     });
+    
+
 
   } catch (err ) {
     next(err); // 👈 השגיאה תועבר ל־middleware הגלובלי

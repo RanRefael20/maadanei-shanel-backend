@@ -4,14 +4,12 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    
     required: [true, "חובה להזין שם משתמש"],
-    
     minlength: [2, "שם משתמש חייב להכיל לפחות 2 תווים"]
   },
   email: {
     type: String,
-    required: [true, "חובה להזין אימייל"],
+    required: [true, "חובה להזין אימייל לצורך אימות"],
     unique: true,
     match: [/.+@.+\..+/, "יש להזין אימייל תקין עם @"]
   },
@@ -22,33 +20,38 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
+    required: false,
     match: [/^\d{9,10}$/, "מספר טלפון לא תקין"]
   },
-
-
-
-address: {
-  type: String,
-  required: [true, "חובה להזין כתובת"],
-  validate: {
-    validator: function (v) {
-      return typeof v === "string" && v.trim().length > 0;
-    },
-    message: "כתובת לא יכולה להיות ריקה"
-  }
-},
-
+  address: {
+    type: String,
+    required: [true, "חובה להזין כתובת"],
+    validate: {
+      validator: function (v) {
+        return typeof v === "string" && v.trim().length > 0;
+      },
+      message: "כתובת לא יכולה להיות ריקה"
+    }
+  },
   birthdate: {
     type: Date
+  },
+
+  // ✅ שדה חדש: נקודות
+  points: {
+    type: Number,
+    default: 0
+  },
+
+  // ✅ שדה חדש: תאריך אחרון של הזמנה
+  lastOrderAt: {
+    type: Date
   }
-
-
 });
 
 // הצפנת סיסמה לפני שמירה
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();

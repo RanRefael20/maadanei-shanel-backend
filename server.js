@@ -2,7 +2,21 @@ const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
+const registerRoutes = require("./routes/register");
+const auth = require("./routes/auth");
+const updateUser = require("./routes/updateUser");
+const verifyPassword = require("./routes/verifyPassword");
+const getUserDetails = require("./routes/getUserDetails");
+const orderRoutes = require("./routes/orders");
+const savedMenuRoutes = require("./routes/savedMenuRoutes");
+const verifyUser = require("./middleware/verifyUser");
+const forgotPassword = require("./routes/forgotPassword");
+const sendOrderRoute = require("./routes/sendOrder");
+const paymentRoutes = require("./routes/payment"); // הנתיב לפי מיקום הקובץ
 
+const checkPointsExpiration = require("./cronJobs/checkPointsExpiration");
+
+checkPointsExpiration();
 
 
 const app = express();
@@ -19,17 +33,8 @@ mongoose.connect(process.env.MONGOURI, {
 .then(() => console.log("✅ חיבור למונגו הצליח!"))
 .catch((err) => console.error("❌ שגיאה בחיבור למונגו:", err));
 
-const registerRoutes = require("./routes/register");
-const auth = require("./routes/auth");
-const updateUser = require("./routes/updateUser");
-const verifyPassword = require("./routes/verifyPassword");
-const getUserDetails = require("./routes/getUserDetails");
-const orderRoutes = require("./routes/orders");
-const savedMenuRoutes = require("./routes/savedMenuRoutes");
 
 
-const tokenaviv = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2Y2ZWQ5Mzk0MzM0NmUxOWYxZmFhNyIsImlhdCI6MTc0OTMyNzg2NCwiZXhwIjoxNzUxMDU1ODY0fQ.hMJVmEBeTfnLTMw8VP1lyuvGZPi996iXATDm1NptIUE';
-const tokenmicha = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2Y2Y2QzMzk0MzM0NmUxOWYxZmE4ZCIsImlhdCI6MTc0OTMyODAyNSwiZXhwIjoxNzUxMDU2MDI1fQ.Ivhj4Ptgmtv4PqwgGx2EdbjE64XPnchEh680bH7y7X4'
 
 app.get("/", (req, res) => {
   res.json({ message: "שרת פעיל!" });
@@ -46,6 +51,14 @@ app.use("/api", updateUser);
 app.use("/api", verifyPassword);
 app.use("/api/orders", orderRoutes);
 app.use("/api/savedMenus", savedMenuRoutes);
+app.use("/api", forgotPassword);
+app.use("/api", verifyUser);
+app.use("/api", sendOrderRoute);
+app.use("/api/payment", paymentRoutes);
+
+
+
+
 
 
 // 404 – אם לא נמצא ראוט מתאים
@@ -85,10 +98,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 השרת רץ על פורט ${PORT}`);
-  if(tokenaviv == tokenmicha){
-  console.log("1111111111111");
-}else{
-  console.log("0000000000");
-  
-}
+
 });

@@ -59,7 +59,7 @@ router.get("/:userId", verifyToken, async (req, res) => {
 
 // GET /api/savedMenus/single/:id – שליפה לפי id
 router.get("/single/:id", verifyToken, async (req, res) => {
-  console.log("single");
+  console.log("טירפת single ףלשנ יפל רזוי");
   
   try {
     const menu = await SavedMenu.findById(req.params.id);
