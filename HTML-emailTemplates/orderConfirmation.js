@@ -5,8 +5,10 @@ const generateOrderEmailHTML = (order) => {
       <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); padding: 24px;">
         <h2 style="color: #007aff; text-align: center;">💙 תודה על ההזמנה שלך</h2>
   
+          <p style="font-size: 14px;"> <strong>מספר הזמנה - ${order.orderNumber} <strong/></p>
+
         <p style="font-size: 16px;">, שלום <strong>${order.username}</strong></p>
-        <p style="font-size: 15px;">קיבלנו את ההזמנה שלך במעדני שנאל. :הנה הפרטים</p>
+        <p style="font-size: 15px;">קיבלנו את ההזמנה שלך , במעדני שנאל. :הנה הפרטים</p>
         <div style="background-color: #f0f4f8; border-radius: 10px; padding: 16px; margin: 20px 0;">
           <h3 style="margin-top: 0;">📋 :פרטי ההזמנה</h3>
           <p><strong>שם:</strong> ${order.username}</p>

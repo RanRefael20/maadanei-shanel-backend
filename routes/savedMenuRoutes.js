@@ -7,18 +7,21 @@ const verifyToken = require(".././middleware/verifyToken");
 router.post("/", verifyToken, async (req, res, next) => {
   try {
     const { name, items, total } = req.body;
-    console.log("🎯 לפני שמירה", { name, items, total, userId: req.user.id });
 
     if (!name || !Array.isArray(items) || typeof total !== "number") {
       return res.status(400).json({ message: "שדות לא תקינים לשמירה" });
     }
 
     // 🔁 ודא שלכל פריט יש קטגוריה – אם לא, שים 'לא מסווג'
-    const sanitizedItems = items.map((item) => ({
-      name: item.name,
-      price: item.price,
-      category: item.category || "לא מסווג"
-    }));
+const sanitizedItems = items.map((item) => ({
+  name: item.name,
+  price: item.price,
+  category: item.category || "לא מסווג",
+  label: item.label || "",
+  sizeKey: item.sizeKey || "",
+  volume: item.volume || 0
+}));
+
 
     const newMenu = new SavedMenu({
       userId: req.user.id,

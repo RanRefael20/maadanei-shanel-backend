@@ -13,6 +13,8 @@ const verifyUser = require("./middleware/verifyUser");
 const forgotPassword = require("./routes/forgotPassword");
 const sendOrderRoute = require("./routes/sendOrder");
 const paymentRoutes = require("./routes/payment"); // הנתיב לפי מיקום הקובץ
+const userRoutes = require("./routes/Admin/users");
+
 
 const checkPointsExpiration = require("./cronJobs/checkPointsExpiration");
 
@@ -55,7 +57,7 @@ app.use("/api", forgotPassword);
 app.use("/api", verifyUser);
 app.use("/api", sendOrderRoute);
 app.use("/api/payment", paymentRoutes);
-
+app.use("/api/users", userRoutes);
 
 
 

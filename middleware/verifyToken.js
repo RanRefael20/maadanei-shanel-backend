@@ -11,8 +11,9 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-req.user = { id: decoded.id }; // ✅ מצמיד את המשתמש
+req.user = { id: decoded.id , email: decoded.email, }; // ✅ מצמיד את המשתמש
     next();
+
   } catch (err) {
     console.error("❌ טוקן לא תקף:", err);
     res.status(403).json({ message: "עלייך להתחבר או להרשם" });

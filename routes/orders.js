@@ -19,6 +19,23 @@ const generateUniqueOrderNumber = async () => {
   return orderNumber;
 };
 
+// 📄 שליפת כל ההזמנות (למנהל בלבד)
+router.get("/all-orders", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user || user.email !== "nashelcheese@gmail.com") {
+      return res.status(403).json({ message: "אין הרשאות גישה" });
+    }
+
+    const orders = await Order.find({}).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    console.error("❌ שגיאה בשליפת כל ההזמנות:", err);
+    res.status(500).json({ message: "שגיאה בשרת" });
+  }
+});
+
+
 // 📦 יצירת הזמנה חדשה
 router.post("/create", async (req, res) => {
   try {
@@ -117,5 +134,19 @@ router.get("/my-orders", verifyToken, async (req, res) => {
     res.status(500).json({ message: "שגיאה בשליפת ההזמנות" });
   }
 });
+
+router.delete("/:id", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user || user.email !== "nashelcheese@gmail.com") {
+      return res.status(403).json({ message: "אין הרשאה למחוק" });
+    }
+    await Order.findByIdAndDelete(req.params.id);
+    res.json({ message: "ההזמנה נמחקה" });
+  } catch (err) {
+    res.status(500).json({ message: "שגיאה במחיקת ההזמנה" });
+  }
+});
+
 
 module.exports = router;

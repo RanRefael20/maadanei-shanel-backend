@@ -4,8 +4,8 @@ const nodemailer = require("nodemailer");
 const generateOrderEmailHTML = require("./../HTML-emailTemplates/orderConfirmation"); // תבנית HTML מותאמת
 
 router.post("/send-order", async (req, res) => {
-  const { to, subject, order, sendBy, status } = req.body; // status: "before" | "after"
-console.log("fff" , to, subject, order, sendBy, status);
+  const { to, subject, order, sendBy, status  } = req.body; // status: "before" | "after"
+console.log("fff" , to, subject, order, sendBy, status );
   if (!order || !to || !sendBy) {
     return res.status(400).json({ message: "נתונים חסרים" });
   }

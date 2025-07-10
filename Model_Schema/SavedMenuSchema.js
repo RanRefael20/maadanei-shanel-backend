@@ -12,9 +12,24 @@ const itemSchema = new mongoose.Schema({
     required: [true, "יש להזין מחיר לפריט"],
     min: [0, "מחיר לא יכול להיות שלילי"]
   },
-   category: {
-    type: String, // ✅ חייב להיות type
+  category: {
+    type: String,
     required: false
+  },
+  label: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  sizeKey: {
+    type: String,
+    required: false,
+    trim: true
+  },
+    volume: {
+    type: Number,
+    required: false,
+    min: [0, "נפח לא יכול להיות שלילי"]
   }
 });
 
